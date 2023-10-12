@@ -1,0 +1,4 @@
+.section {
+  width: clamp(250px, 100%, 800px);
+  height: fit-content;
+}

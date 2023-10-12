@@ -1,0 +1,32 @@
+.title {
+    color: #000;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .subtitle {
+    color: #000;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  .button {
+    display: flex;
+    padding: 0.375rem 0.75rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    color: #000;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 0.3125rem;
+    border: 1px solid #000;
+    opacity: 0.7;
+    background: linear-gradient(180deg, #e4e4e4 0%, #f7f7f7 100%);
+  }
+  
