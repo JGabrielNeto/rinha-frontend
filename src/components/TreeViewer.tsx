@@ -1,14 +1,18 @@
 import styles from "@/styles/TreeViewer.module.css";
 
 export const TreeViewer = ({ data, title }: treeViewerProps) => {
-  const constructTree = (data: Record<string | number, any>) => {
+  const constructTree = (
+    data: Record<string | number, any>,
+    currKey = title
+  ) => {
     const tree = [];
     for (const node in data) {
+      const newKey = currKey + node;
       tree.push(
-        <li>
-          {node}:{' '}
+        <li key={newKey}>
+          {node}:{" "}
           {typeof data[node] === "object" && data[node] !== null ? (
-            <ul>{constructTree(data[node])}</ul>
+            <ul>{constructTree(data[node], newKey)}</ul>
           ) : (
             data[node]
           )}
