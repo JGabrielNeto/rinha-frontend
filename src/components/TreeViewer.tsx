@@ -1,30 +1,43 @@
 import styles from "@/styles/TreeViewer.module.css";
 
-export const TreeViewer = ({ data, title }: treeViewerProps) => {
-  const constructTree = (
-    data: Record<string | number, any>,
-    currKey = title
-  ) => {
+const trampoline =
+  (fn) =>
+  (...args) => {
+    let result = fn(...args);
+    while (typeof result === "function") {
+      result = result();
+    }
+    return result;
+  };
+
+const recursiveCall = (data: any, callback: any) =>
+  typeof data === "object" && data !== null ? () => callback(data) : data;
+
+const returnValueOrCallFn = trampoline(recursiveCall);
+
+export const TreeViewer = ({ title }: treeViewerProps) => {
+  const data = globalThis.parsedJson as treeViewerProps["data"];
+
+  const recursiveTree = (data: treeViewerProps["data"]) => {
     const tree = [];
     for (const node in data) {
-      const newKey = currKey + node;
+      console.log(node)
+      const currValue = returnValueOrCallFn(data[node], recursiveTree);
       tree.push(
-        <li key={newKey}>
-          {node}:{" "}
-          {typeof data[node] === "object" && data[node] !== null ? (
-            <ul>{constructTree(data[node], newKey)}</ul>
-          ) : (
-            data[node]
-          )}
+        <li key={node}>
+          {node}: {currValue}
         </li>
       );
     }
-    return tree;
+    return <ul>{tree}</ul>;
   };
+
+  const tree = recursiveTree(data);
+
   return (
     <section className={styles.section}>
       <h1>{title}</h1>
-      <ul>{constructTree(data)}</ul>
+      {tree}
     </section>
   );
 };

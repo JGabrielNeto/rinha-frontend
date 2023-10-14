@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { JsonForm } from "@/components/JsonForm";
@@ -29,24 +29,17 @@ const readAsync = async (file: File) => {
 };
 
 export default function Home() {
-  const [json, setJson] = useState<File | null>(null);
-  const [response, setResponse] = useState<any>();
+  const [name, setName] = useState("");
 
-  const handleJsonUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setJson([...(e.target.files || [])][0]);
-  };
-
-  const responsesCb = useCallback(async (files: File) => {
-    const resArray = await readAsync(files);
-    setResponse(resArray);
+  const responsesCb = useCallback(async (file: File) => {
+    const parsedJson = await readAsync(file);
+    setName(file.name);
+    globalThis.parsedJson = parsedJson;
   }, []);
 
-  useEffect(() => {
-    if (json) {
-      responsesCb(json);
-    }
-  }, [json, responsesCb]);
+  const handleJsonUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    responsesCb([...(e.target.files || [])][0]);
+  };
 
   return (
     <>
@@ -57,8 +50,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        {response ? (
-          <TreeViewer data={response} title={json?.name || ''}/>
+        {name ? (
+          <TreeViewer title={name} />
         ) : (
           <JsonForm onChange={handleJsonUpload} />
         )}
